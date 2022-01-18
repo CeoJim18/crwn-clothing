@@ -1,24 +1,21 @@
 import React from 'react';
 import HomePage from './pages/homepage/homepage.component';
+import ShopPage from './pages/shop/shop.component';
 import { Route, Switch} from 'react-router-dom';
 import './App.css';
 
 
-const HatsPage=()=>(
-  <div>
-    <h1>HATS PAGE</h1>
-  </div>
-);
+
 //voordeel van switch is dat je niet per ongeluk gewoon meerdere routes zal renderen
 function App() {
   return (
     <div className="App">
 
-      <Switch>
+    <Switch>
      <Route exact path='/' component={HomePage} />
-     <Route path='/hats' component={HatsPage} />
-     </Switch>
-      
+     <Route path='/shop' component={ShopPage} />
+     
+      </Switch>
     </div>
   );
 }
