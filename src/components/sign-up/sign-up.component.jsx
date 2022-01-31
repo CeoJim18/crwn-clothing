@@ -29,7 +29,7 @@ class SignUp extends React.Component{
 
     try{
       const {user}= await auth.createUserWithEmailAndPassword(email,password);//opzoeken over createUserWithEmailAndPassword
-
+      console.log(user);
       await createUserProfileDocument(user, {displayName});//door {displayName} te notern between curly braces, pass je het in key value pair (object zie: https://stackoverflow.com/questions/37722619/javascript-curly-braces-argument-as-function-parameter/37722746)
 
 
@@ -40,7 +40,7 @@ class SignUp extends React.Component{
         confirmPassword:''
       })
     } catch(err){
-      console.log(err);
+      console.log('hehehe'+ err);
 
     }
 

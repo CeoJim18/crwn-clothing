@@ -6,7 +6,7 @@ import FormInput from '../form-input/form-input.component';
 
 import CustomButton from '../custom-button/custom-button.component';
 
-import { signInWithGoogle } from '../../firebase/firebase.utils';
+import {auth, signInWithGoogle } from '../../firebase/firebase.utils';
 
 class SignIn extends React.Component{
   constructor(props){
@@ -15,16 +15,23 @@ class SignIn extends React.Component{
     this.state={
       email:'',
       password:''
+      //bij forms kan je dus een state maken van de elementen die je moet intypen. In sign in zijn het email en pw; in sign-up zijn het andere dingen. Je maakt die states om vgm die value bij je inputform dynamisch te veranderen. Idk why et verandert zou moeten worden tho.*Opzoeken
     }
   }
-handleSubmit=(event)=>{
+handleSubmit= async (event)=>{
 event.preventDefault();
-
-this.setState({email:'',password:''})
+const {email, password}=this.state;//want is in state gesaved die value van de input. **hierom is het ook nodig om state te koppelen aan value. zodat je de value makkelijk kan accessen.
+try{
+  await auth.signInWithEmailAndPassword(email,password);
+  this.setState({email:'',password:''});//runt wanneer de bovenste line true is als het ware
+}
+catch(error){
+  console.log(error);
+}
 }
 
-handleChange=(event)=>{
- const {name,value}=event.target;
+handleChange=(event)=>{//handleChange runs on every keystroke and updates state
+ const {name,value}=event.target;//je haalt name en value uit die event target (zie deconstructuring)
 
  this.setState({[name]:value})
  //je zet het tussen [] als het niet voorkwam. Dit is ook om de prop in je state dynamisch te veranderen
