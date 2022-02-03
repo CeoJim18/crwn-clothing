@@ -3,6 +3,8 @@ import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component'
 import {auth, createUserProfileDocument} from './firebase/firebase.utils';
+import {connect} from 'react-redux';
+import {setCurrentUser} from './redux/user/user.action';
 
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import { Route, Switch} from 'react-router-dom';
@@ -12,26 +14,23 @@ import './App.css';
 
 //voordeel van switch is dat je niet per ongeluk gewoon meerdere routes zal renderen
 class App extends React.Component {
-  constructor(){
-    super();
-      this.state={
-          currentUser:null
-      }
 
-  }
+  //je kan in deze scope geen const zetten
+  
  unsubscribeFromAuth=null;
 
  componentDidMount(){
+  const {setCurrentUser}=this.props;
     this.unsubscribeFromAuth=auth.onAuthStateChanged( async userAuth => {
       if (userAuth){//als je out signed is het null, dan wordt currentUser ook null. Ben je ingesigned dan heeft et andere waardes
         const userRef = await createUserProfileDocument(userAuth);//dit returned een reference naar de datebase
+        //createUserProfileDocument stored user in database (met set method)
 
         userRef.onSnapshot(snapShot =>{ //van die reference naar de database wil jij een snapshot
-          this.setState({
-            currentUser:{
+          setCurrentUser({
               id: snapShot.id,
               ...snapShot.data()
-            }
+            
           });
           
             
@@ -39,7 +38,7 @@ class App extends React.Component {
         
       }
      
-        this.setState({currentUser:userAuth});
+        setCurrentUser(userAuth);
        
       
     });
@@ -49,11 +48,12 @@ class App extends React.Component {
   componentWillUnmount(){
     this.unsubscribeFromAuth();
   }
+  //currentUser pass je als prop in header omdat je je header (sign in of sign up text) wilt updaten als er een user is of niet
   render(){
     return(
     <div className="App">
-
-    <Header currentUser={this.state.currentUser}/>
+    <Header  />
+  
     <Switch>
      <Route exact path='/' component={HomePage} />
      <Route path='/shop' component={ShopPage} />
@@ -63,6 +63,10 @@ class App extends React.Component {
     </div>
   );
 }
-}
+};
 
-export default App;
+const mapDispatchtoProps=dispatch =>({
+ setCurrentUser: user => dispatch(setCurrentUser(user))//dispatch betekent vgm verzenden naar functie (als argu) wat doet setCurrentUser: precies
+})
+
+export default connect(null,mapDispatchtoProps)(App);

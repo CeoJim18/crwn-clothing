@@ -29,7 +29,10 @@ class SignUp extends React.Component{
 
     try{
       const {user}= await auth.createUserWithEmailAndPassword(email,password);//opzoeken over createUserWithEmailAndPassword
-      console.log(user);
+      //createUserWithEmailAndPassword returned een user, maar als de email al in bruik is, produceert het een error die gecatch zal worden.
+      //dit gaat dus gelijk naar catch springen
+      //om in te signen heet de method signInwithEmailAndPassword
+      //console.log(user); --> vandaar dit niet wordt uitgevoerd
       await createUserProfileDocument(user, {displayName});//door {displayName} te notern between curly braces, pass je het in key value pair (object zie: https://stackoverflow.com/questions/37722619/javascript-curly-braces-argument-as-function-parameter/37722746)
 
 
@@ -40,7 +43,7 @@ class SignUp extends React.Component{
         confirmPassword:''
       })
     } catch(err){
-      console.log('hehehe'+ err);
+      console.log(err);
 
     }
 

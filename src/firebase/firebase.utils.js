@@ -26,12 +26,12 @@ export const createUserProfileDocument= async (userAuth,additionalData) =>
      const createdAt= new Date();
 
      try{
-      await userRef.set({
+      await userRef.set({ //get en set methods zijn altijd async, omdat het niet gelijk runned ( je maakt requests/je doet iets buiten de programma)
         displayName,
         email,
         createdAt,
         ...additionalData
-      })
+      })//die set stored data in database
      } catch(error){
        console.log('Error creating user', error.message);
      }

@@ -5,11 +5,17 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom';
+import {Provider} from 'react-redux'; //een component die je moet wrappen om app. omdat alles in die app access moet hebebn tot store obj
 
+import store from './redux/store';
+
+//store pass je als prop in provides, zodat de rest ook toegang ertot krijgt.
 ReactDOM.render(
+  <Provider store={store}>
   <BrowserRouter>
   <App />
-  </BrowserRouter>,
+  </BrowserRouter>
+  </Provider>,
   document.getElementById('root')
 );
 
