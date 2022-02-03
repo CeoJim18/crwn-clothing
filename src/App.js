@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import {setCurrentUser} from './redux/user/user.action';
 
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import { Route, Switch} from 'react-router-dom';
+import { Route, Switch, Redirect} from 'react-router-dom';
 import './App.css';
 
 
@@ -38,8 +38,7 @@ class App extends React.Component {
         
       }
      
-        setCurrentUser(userAuth);
-       
+        setCurrentUser(userAuth);//waar de functie gebruikt als object??       
       
     });
   }
@@ -57,16 +56,19 @@ class App extends React.Component {
     <Switch>
      <Route exact path='/' component={HomePage} />
      <Route path='/shop' component={ShopPage} />
-     <Route path='/signIn' component={SignInAndSignUpPage} />
+     <Route exact path='/signIn' render={()=>this.props.currentUser? (<Redirect to='/'/>):(<SignInAndSignUpPage/>) }/>
      
       </Switch>
     </div>
   );
 }
 };
+const mapStateToProps =({user})=> ({
+  currentUser:user.currentUser
+})
 
 const mapDispatchtoProps=dispatch =>({
  setCurrentUser: user => dispatch(setCurrentUser(user))//dispatch betekent vgm verzenden naar functie (als argu) wat doet setCurrentUser: precies
 })
 
-export default connect(null,mapDispatchtoProps)(App);
+export default connect(mapStateToProps,mapDispatchtoProps)(App);
