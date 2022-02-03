@@ -5,8 +5,11 @@ import './header.styles.scss';
 
 import {ReactComponent as Logo} from '../../assets/crown.svg'
 import {connect} from 'react-redux';
+import CartIcon from '../cart-icon/cart-icon.component';
 
-const Header =({currentUser})=>(
+import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+
+const Header =({currentUser, hidden})=>(
   <div className='header'>
     <Link to='/' className='logo-container'>
     <Logo className='logo'/>
@@ -24,12 +27,19 @@ const Header =({currentUser})=>(
         :
         <Link className='option' to='/signin'>SIGN IN</Link>
       }
+      <CartIcon/>
     </div>
+    {
+      hidden ? null :
+      <CartDropdown/>
+    }
+    
   </div>
 )
 
-const mapStateToProps=(state)=>({
-currentUser: state.user.currentUser 
+const mapStateToProps=({user :{currentUser}, cart:{hidden}})=>({//advanced  destructioring (opzoeken)
+currentUser,
+hidden
 })
 
 export default connect(mapStateToProps)(Header);//je passed infeite de root reducer value in en je zet het in header

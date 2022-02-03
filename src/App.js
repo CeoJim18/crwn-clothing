@@ -49,6 +49,7 @@ class App extends React.Component {
   }
   //currentUser pass je als prop in header omdat je je header (sign in of sign up text) wilt updaten als er een user is of niet
   render(){
+    const {currentUser}=this.props;
     return(
     <div className="App">
     <Header  />
@@ -56,7 +57,7 @@ class App extends React.Component {
     <Switch>
      <Route exact path='/' component={HomePage} />
      <Route path='/shop' component={ShopPage} />
-     <Route exact path='/signIn' render={()=>this.props.currentUser? (<Redirect to='/'/>):(<SignInAndSignUpPage/>) }/>
+     <Route exact path='/signIn' render={()=>currentUser? (<Redirect to='/'/>):(<SignInAndSignUpPage/>) }/>
      
       </Switch>
     </div>
@@ -68,7 +69,7 @@ const mapStateToProps =({user})=> ({
 })
 
 const mapDispatchtoProps=dispatch =>({
- setCurrentUser: user => dispatch(setCurrentUser(user))//dispatch betekent vgm verzenden naar functie (als argu) wat doet setCurrentUser: precies
+ setCurrentUser: user => dispatch(setCurrentUser(user))//dispatch betekent vgm verzenden naar (action) functie (als argu) wat doet setCurrentUser: precies
 })
 
 export default connect(mapStateToProps,mapDispatchtoProps)(App);
