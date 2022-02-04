@@ -18,7 +18,7 @@ const cartReducer =(state=INITIAL_STATE, action)=>{
         return{
           ...state,
           cartItems: addItemToCart(state.cartItems,action.payload)//zo pass je dus een 2e waarde in
-        }
+        };
       default:
         return state;
   }

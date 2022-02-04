@@ -6,8 +6,11 @@ import './header.styles.scss';
 import {ReactComponent as Logo} from '../../assets/crown.svg'
 import {connect} from 'react-redux';
 import CartIcon from '../cart-icon/cart-icon.component';
+import {createStructuredSelector} from 'reselect';
 
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+import { selectCartHidden } from '../../redux/cart/cart.selectors';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 const Header =({currentUser, hidden})=>(
   <div className='header'>
@@ -37,9 +40,10 @@ const Header =({currentUser, hidden})=>(
   </div>
 )
 
-const mapStateToProps=({user :{currentUser}, cart:{hidden}})=>({//advanced  destructioring (opzoeken)
-currentUser,
-hidden
-})
+const mapStateToProps=createStructuredSelector({//advanced  destructioring (opzoeken)
+currentUser: selectCurrentUser,
+hidden:selectCartHidden
+});
+//createStructuredSelector van reselect zorgt ervoor dat de higher state automatisch wordt gepassed als props van de selectors. je hoeft het dus niet expliciet te doen. 
 
 export default connect(mapStateToProps)(Header);//je passed infeite de root reducer value in en je zet het in header

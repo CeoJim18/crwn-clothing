@@ -9,9 +9,11 @@ import {setCurrentUser} from './redux/user/user.action';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import { Route, Switch, Redirect} from 'react-router-dom';
 import './App.css';
+import CheckoutPage from './pages/checkout/checkout.component';
 
+import {selectCurrentUser} from './redux/user/user.selectors';
 
-
+import {createStructuredSelector} from 'reselect';
 //voordeel van switch is dat je niet per ongeluk gewoon meerdere routes zal renderen
 class App extends React.Component {
 
@@ -57,6 +59,7 @@ class App extends React.Component {
     <Switch>
      <Route exact path='/' component={HomePage} />
      <Route path='/shop' component={ShopPage} />
+     <Route exact path ='/checkout' component={CheckoutPage}/>
      <Route exact path='/signIn' render={()=>currentUser? (<Redirect to='/'/>):(<SignInAndSignUpPage/>) }/>
      
       </Switch>
@@ -64,8 +67,8 @@ class App extends React.Component {
   );
 }
 };
-const mapStateToProps =({user})=> ({
-  currentUser:user.currentUser
+const mapStateToProps =createStructuredSelector ({
+  currentUser:selectCurrentUser
 })
 
 const mapDispatchtoProps=dispatch =>({

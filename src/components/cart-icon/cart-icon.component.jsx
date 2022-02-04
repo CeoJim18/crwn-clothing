@@ -5,20 +5,22 @@ import './cart-icon.styles.scss';
 import { toggleCartHidden} from '../../redux/cart/cart.action';
 
 import { selectCartItemsCount } from '../../redux/cart/cart.selectors';
+import {createStructuredSelector} from 'reselect'
 
-const CartIcon=({toggleCartHidden})=>(//destructoring from props
+const CartIcon=({toggleCartHidden,itemCount})=>(//destructoring from props
   <div className='cart-icon' onClick={toggleCartHidden}>
-    <ShoppingIcon class='shopping-icon'/>
-    <span class='item-count'>0</span>
+    <ShoppingIcon className='shopping-icon'/>
+    <span className='item-count'>{itemCount}</span>
   </div>
-)
+);
 
 const mapDispatchToProps= dispatch=>({
   toggleCartHidden: ()=>dispatch(toggleCartHidden())
-})
+});//2e param van reduce MOET 1 hele element zijn van de list waarop het werkt. Geen prop ervan ofzo.
 
-const mapStateToProps = ({cart:{cartItems}})=>({
-  itemCount: selectCartItemsCount//2e param van reduce MOET 1 hele element zijn van de list waarop het werkt. Geen prop ervan ofzo.
-})
+const mapStateToProps = createStructuredSelector({
+  itemCount: selectCartItemsCount
+});
 
-export default connect(null,mapDispatchToProps)(CartIcon);
+export default connect(mapStateToProps,mapDispatchToProps)(CartIcon);
+
