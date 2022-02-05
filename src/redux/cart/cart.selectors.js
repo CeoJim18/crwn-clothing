@@ -24,3 +24,5 @@ export const selectCartTotal = createSelector(
   [selectCartItems],
   cartItems=> cartItems.reduce((accumalatedQuantity, cartItem)=> accumalatedQuantity + cartItem.quantity * cartItem.price,0)
 )
+
+//selectors maak je meestal voor components die je wilt laten veranderen als gevolg van verandering van andere states. De state zelf wil je niet veranderen, maar alleeen de component.

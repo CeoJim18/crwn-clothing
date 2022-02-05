@@ -6,19 +6,23 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux'; //een component die je moet wrappen om app. omdat alles in die app access moet hebebn tot store obj
+import { PersistGate } from 'redux-persist/integration/react';//je kan redux voor andere libs ook geb
 
-import store from './redux/store';
+import {store,persistor} from './redux/store';
 
-//store pass je als prop in provides, zodat de rest ook toegang ertot krijgt.
+
 ReactDOM.render(
   <Provider store={store}>
   <BrowserRouter>
+  <PersistGate persistor={persistor}>
   <App />
+  </PersistGate>
+  
   </BrowserRouter>
   </Provider>,
   document.getElementById('root')
 );
-
+//store pass je als prop in provides, zodat de rest ook toegang ertot krijgt.
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA
