@@ -1,8 +1,9 @@
 import React from 'react';
+
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component'
-import {auth, createUserProfileDocument} from './firebase/firebase.utils';
+import {auth, createUserProfileDocument,addCollectionAndDocuments} from './firebase/firebase.utils';
 import {connect} from 'react-redux';
 import {setCurrentUser} from './redux/user/user.action';
 
@@ -14,7 +15,12 @@ import CheckoutPage from './pages/checkout/checkout.component';
 import {selectCurrentUser} from './redux/user/user.selectors';
 
 import {createStructuredSelector} from 'reselect';
+
+import {selectCollectionsForPreview} from './redux/shop/shop.selectors';
 //voordeel van switch is dat je niet per ongeluk gewoon meerdere routes zal renderen
+
+
+
 class App extends React.Component {
 
   //je kan in deze scope geen const zetten
@@ -22,7 +28,9 @@ class App extends React.Component {
  unsubscribeFromAuth=null;
 
  componentDidMount(){
-  const {setCurrentUser}=this.props;
+
+
+  const {setCurrentUser,collectionsArray}=this.props;
     this.unsubscribeFromAuth=auth.onAuthStateChanged( async userAuth => {
       if (userAuth){//als je out signed is het null, dan wordt currentUser ook null. Ben je ingesigned dan heeft et andere waardes
         const userRef = await createUserProfileDocument(userAuth);//dit returned een reference naar de datebase
@@ -41,7 +49,7 @@ class App extends React.Component {
       }
      
         setCurrentUser(userAuth);//waar de functie gebruikt als object??       
-      
+        addCollectionAndDocuments('collections',collectionsArray.map(({title,items})=>({title,items})))
     });
   }
 
@@ -68,7 +76,8 @@ class App extends React.Component {
 }
 };
 const mapStateToProps =createStructuredSelector ({
-  currentUser:selectCurrentUser
+  currentUser:selectCurrentUser,
+  collectionsArray: selectCollectionsForPreview
 })
 
 const mapDispatchtoProps=dispatch =>({
