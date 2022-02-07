@@ -1,10 +1,10 @@
-const INITIAL_STATE={
-  sections:[
+const INITIAL_STATE = {
+  sections: [
     {
       title: 'hats',
       imageUrl: 'https://i.ibb.co/cvpntL1/hats.png',
       id: 1,
-      linkUrl: 'shop/hats',
+      linkUrl: 'shop/hats'
     },
     {
       title: 'jackets',
@@ -35,11 +35,11 @@ const INITIAL_STATE={
   ]
 };
 
-const directoryReducer=(state=INITIAL_STATE,action)=>{
-  switch(action.type){
+const directoryReducer = (state = INITIAL_STATE, action) => {
+  switch (action.type) {
     default:
       return state;
-  }//je zet die switch gewoon voor de lol basically, want enigste wat je doet is die init state returnen
-}
+  }
+};
 
 export default directoryReducer;

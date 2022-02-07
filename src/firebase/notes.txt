@@ -1,5 +1,0 @@
-als je get methods niet hoeft te zetten in try catch blocks...why moet set dan wel?
-
-wat is een listener?
-
-onsnapshot method beter researchen

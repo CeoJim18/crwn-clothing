@@ -5,28 +5,28 @@ import CollectionItem from '../../components/collection-item/collection-item.com
 
 import { selectCollection } from '../../redux/shop/shop.selectors';
 
-import './collection.styles.scss';
+import {
+  CollectionPageContainer,
+  CollectionTitle,
+  CollectionItemsContainer
+} from './collection.styles';
 
-const CollectionPage =({collection})=>{
-  const {title,items}= collection;
-  return(
-  <div className='collection-page'>
-    <h2 className='title'>{title}</h2>
-    <div className='items'>
-      {
-        items.map(item=> <CollectionItem key= {item.id} item={item}></CollectionItem>)
-      }
+const CollectionPage = ({ collection }) => {
+  const { title, items } = collection;
+  return (
+    <CollectionPageContainer>
+      <CollectionTitle>{title}</CollectionTitle>
+      <CollectionItemsContainer>
+        {items.map(item => (
+          <CollectionItem key={item.id} item={item} />
+        ))}
+      </CollectionItemsContainer>
+    </CollectionPageContainer>
+  );
+};
 
-    </div>
+const mapStateToProps = (state, ownProps) => ({
+  collection: selectCollection(ownProps.match.params.collectionId)(state)
+});
 
-  </div>
-)
-  }
-
-  const mapStateToProps=(state, ownProps)=>({
-
-    collection:selectCollection(ownProps.match.params.collectionId)(state)//state moet je zo wel passen, omdat je zonder die geen selector flow kan hebben. Het moet in zo een volgorde, omdat je eerst de parameter voor selectCollection moet providen
-  })
 export default connect(mapStateToProps)(CollectionPage);
-
-//ownProps zijn de props van de component die in de connect gewrapped worden

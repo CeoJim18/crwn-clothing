@@ -1,87 +1,82 @@
 import React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+
+import './App.css';
 
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
-import Header from './components/header/header.component'
-import {auth, createUserProfileDocument,addCollectionAndDocuments} from './firebase/firebase.utils';
-import {connect} from 'react-redux';
-import {setCurrentUser} from './redux/user/user.action';
-
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import { Route, Switch, Redirect} from 'react-router-dom';
-import './App.css';
 import CheckoutPage from './pages/checkout/checkout.component';
 
-import {selectCurrentUser} from './redux/user/user.selectors';
+import Header from './components/header/header.component';
 
-import {createStructuredSelector} from 'reselect';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
-import {selectCollectionsForPreview} from './redux/shop/shop.selectors';
-//voordeel van switch is dat je niet per ongeluk gewoon meerdere routes zal renderen
-
-
+import { setCurrentUser } from './redux/user/user.actions';
+import { selectCurrentUser } from './redux/user/user.selectors';
 
 class App extends React.Component {
+  unsubscribeFromAuth = null;
 
-  //je kan in deze scope geen const zetten
-  
- unsubscribeFromAuth=null;
+  componentDidMount() {
+    const { setCurrentUser } = this.props;
 
- componentDidMount(){
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
 
-
-  const {setCurrentUser,collectionsArray}=this.props;
-    this.unsubscribeFromAuth=auth.onAuthStateChanged( async userAuth => {
-      if (userAuth){//als je out signed is het null, dan wordt currentUser ook null. Ben je ingesigned dan heeft et andere waardes
-        const userRef = await createUserProfileDocument(userAuth);//dit returned een reference naar de datebase
-        //createUserProfileDocument stored user in database (met set method)
-
-        userRef.onSnapshot(snapShot =>{ //van die reference naar de database wil jij een snapshot
+        userRef.onSnapshot(snapShot => {
           setCurrentUser({
-              id: snapShot.id,
-              ...snapShot.data()
-            
+            id: snapShot.id,
+            ...snapShot.data()
           });
-          
-            
         });
-        
       }
-     
-        setCurrentUser(userAuth);//waar de functie gebruikt als object??       
-        addCollectionAndDocuments('collections',collectionsArray.map(({title,items})=>({title,items})))
+
+      setCurrentUser(userAuth);
     });
   }
 
-
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.unsubscribeFromAuth();
   }
-  //currentUser pass je als prop in header omdat je je header (sign in of sign up text) wilt updaten als er een user is of niet
-  render(){
-    const {currentUser}=this.props;
-    return(
-    <div className="App">
-    <Header  />
-  
-    <Switch>
-     <Route exact path='/' component={HomePage} />
-     <Route path='/shop' component={ShopPage} />
-     <Route exact path ='/checkout' component={CheckoutPage}/>
-     <Route exact path='/signIn' render={()=>currentUser? (<Redirect to='/'/>):(<SignInAndSignUpPage/>) }/>
-     
-      </Switch>
-    </div>
-  );
+
+  render() {
+    return (
+      <div>
+        <Header />
+        <Switch>
+          <Route exact path='/' component={HomePage} />
+          <Route path='/shop' component={ShopPage} />
+          <Route exact path='/checkout' component={CheckoutPage} />
+          <Route
+            exact
+            path='/signin'
+            render={() =>
+              this.props.currentUser ? (
+                <Redirect to='/' />
+              ) : (
+                <SignInAndSignUpPage />
+              )
+            }
+          />
+        </Switch>
+      </div>
+    );
+  }
 }
-};
-const mapStateToProps =createStructuredSelector ({
-  currentUser:selectCurrentUser,
-  collectionsArray: selectCollectionsForPreview
-})
 
-const mapDispatchtoProps=dispatch =>({
- setCurrentUser: user => dispatch(setCurrentUser(user))//dispatch betekent vgm verzenden naar (action) functie (als argu) wat doet setCurrentUser: precies
-})
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
+});
 
-export default connect(mapStateToProps,mapDispatchtoProps)(App);
+const mapDispatchToProps = dispatch => ({
+  setCurrentUser: user => dispatch(setCurrentUser(user))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
